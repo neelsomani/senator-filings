@@ -1,0 +1,6 @@
+beautifulsoup4==4.5.3
+jupyterlab==2.1.2
+matplotlib==3.2.1
+pandas==0.25.3
+selenium==3.141.0
+yfinance==0.1.54

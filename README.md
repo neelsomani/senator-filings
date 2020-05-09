@@ -7,10 +7,6 @@ python3, Selenium
 
 ## Quick start
 
-Scrape all of the senators' filings with:
-
-```
-python3 main.py
-```
+Scrape all of the senators' filings: `python3 main.py`
 
 Analyze the results by starting a Jupyter server and going through the notebook: `jupyter notebook`

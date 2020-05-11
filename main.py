@@ -155,7 +155,9 @@ def main():
     search(driver)
     set_search_results_layout(driver)
     all_txs = pd.DataFrame()
+    i = 0
     while True:
+        i += 1
         LOGGER.info('Starting page {}'.format(i))
         LOGGER.info('{} rows so far'.format(len(all_txs)))
         time.sleep(2)

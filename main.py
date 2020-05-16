@@ -38,7 +38,7 @@ def click_on(driver: webdriver.Chrome, element: Any) -> None:
 
 
 def open_page() -> webdriver.Chrome:
-    driver = webdriver.Chrome('./chromedriver')
+    driver = webdriver.Chrome('chromedriver')
     driver.get(FILINGS_HOME)
     return driver
 

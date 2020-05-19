@@ -3,7 +3,7 @@ Scrape public filings of the buy + sell orders of U.S. senators and calculate th
 
 ## Requirements
 
-python3, Selenium
+python3
 
 ## Quick Start
 

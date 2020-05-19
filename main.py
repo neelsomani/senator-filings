@@ -121,7 +121,7 @@ def main() -> pd.DataFrame:
     all_txs = pd.DataFrame()
     for i, row in enumerate(reports):
         time.sleep(RATE_LIMIT_SECS)
-        if i % 100 == 0:
+        if i % 10 == 0:
             LOGGER.info('Fetching report #{}'.format(i))
             LOGGER.info('{} transactions total'.format(len(all_txs)))
         txs = txs_for_report(client, row)
@@ -130,7 +130,8 @@ def main() -> pd.DataFrame:
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO)
+    log_format = '[%(asctime)s %(levelname)s] %(message)s'
+    logging.basicConfig(level=logging.INFO, format=log_format)
     senator_txs = main()
     LOGGER.info('Dumping to .pickle')
     with open('notebooks/senators.pickle', 'wb') as f:

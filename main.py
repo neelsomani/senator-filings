@@ -3,6 +3,7 @@
 from selenium import webdriver
 from selenium.common.exceptions import StaleElementReferenceException
 
+import platform
 import datetime
 import logging
 import pandas as pd
@@ -38,11 +39,13 @@ def click_on(driver: webdriver.Chrome, element: Any) -> None:
 
 
 def open_page() -> webdriver.Chrome:
-    try:
-        driver = webdriver.Chrome('./chromedriver')
-    except OSError:
-        LOGGER.warning('Error creating driver', exc_info=True)
-        driver = webdriver.Chrome('chromedriver')
+    if platform.system() == "Darwin":
+        driver = webdriver.Chrome('./chromedriver-mac')
+    elif platform.system() == "Windows":
+        driver = webdriver.Chrome('chromedriver-windows.exe')
+    elif platform.system() == "Linux":
+        driver = webdriver.Chrome('./chromedriver-linux')
+    
     driver.get(FILINGS_HOME)
     return driver
 

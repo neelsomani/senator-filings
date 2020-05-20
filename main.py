@@ -1,6 +1,7 @@
 """ Scrape the stock transactions from Senator periodic filings. """
 
 from bs4 import BeautifulSoup
+
 import logging
 import pandas as pd
 import pickle

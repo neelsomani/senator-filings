@@ -11,11 +11,12 @@ from typing import List
 
 
 ROOT = 'https://efdsearch.senate.gov'
-CSRF_URL = '{}/search/'.format(ROOT)
+LANDING_PAGE_URL = '{}/search/home/'.format(ROOT)
+SEARCH_PAGE_URL = '{}/search/'.format(ROOT)
 REPORTS_URL = '{}/search/report/data/'.format(ROOT)
 
 BATCH_SIZE = 100
-RATE_LIMIT_SECS = 1
+RATE_LIMIT_SECS = 2
 
 REPORT_COL_NAMES = [
     'tx_date',
@@ -32,8 +33,19 @@ LOGGER = logging.getLogger(__name__)
 
 
 def _csrf(client: requests.Session) -> str:
-    """ Return the CSRF token for this session. """
-    client.get(CSRF_URL)
+    """ Set the session ID and return the CSRF token for this session. """
+    landing_page = BeautifulSoup(client.get(LANDING_PAGE_URL).text, 'lxml')
+    form_csrf = landing_page.find(
+        attrs={'name': 'csrfmiddlewaretoken'}
+    )['value']
+    form_payload = {
+        'csrfmiddlewaretoken': form_csrf,
+        'prohibition_agreement': '1'
+    }
+    client.post(LANDING_PAGE_URL,
+                data=form_payload,
+                headers={'Referer': LANDING_PAGE_URL})
+
     if 'csrftoken' in client.cookies:
         csrftoken = client.cookies['csrftoken']
     else:
@@ -76,7 +88,9 @@ def reports_api(
         'csrfmiddlewaretoken': token
     }
     LOGGER.info('Getting rows starting at {}'.format(offset))
-    response = client.post(REPORTS_URL, data=login_data, headers=dict(Referer=CSRF_URL))
+    response = client.post(REPORTS_URL,
+                           data=login_data,
+                           headers={'Referer': SEARCH_PAGE_URL})
     return response.json()['data']
 
 
@@ -117,6 +131,7 @@ def txs_for_report(client: requests.Session, row: List[str]) -> pd.DataFrame:
 
 
 def main() -> pd.DataFrame:
+    LOGGER.info('Initializing client')
     client = requests.Session()
     reports = senator_reports(client)
     all_txs = pd.DataFrame()

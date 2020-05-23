@@ -7,7 +7,7 @@ import pandas as pd
 import pickle
 import requests
 import time
-from typing import List
+from typing import Any, List, Optional
 
 
 ROOT = 'https://efdsearch.senate.gov'
@@ -17,6 +17,9 @@ REPORTS_URL = '{}/search/report/data/'.format(ROOT)
 
 BATCH_SIZE = 100
 RATE_LIMIT_SECS = 2
+
+PDF_PREFIX = '/search/view/paper/'
+LANDING_PAGE_FAIL = 'Failed to fetch filings landing page'
 
 REPORT_COL_NAMES = [
     'tx_date',
@@ -32,9 +35,19 @@ REPORT_COL_NAMES = [
 LOGGER = logging.getLogger(__name__)
 
 
+def add_rate_limit(f):
+    def with_rate_limit(*args, **kw):
+        time.sleep(RATE_LIMIT_SECS)
+        return f(*args, **kw)
+    return with_rate_limit
+
+
 def _csrf(client: requests.Session) -> str:
     """ Set the session ID and return the CSRF token for this session. """
-    landing_page = BeautifulSoup(client.get(LANDING_PAGE_URL).text, 'lxml')
+    landing_page_response = client.get(LANDING_PAGE_URL)
+    assert landing_page_response.url == LANDING_PAGE_URL, LANDING_PAGE_FAIL
+
+    landing_page = BeautifulSoup(landing_page_response.text, 'lxml')
     form_csrf = landing_page.find(
         attrs={'name': 'csrfmiddlewaretoken'}
     )['value']
@@ -60,7 +73,6 @@ def senator_reports(client: requests.Session) -> List[List[str]]:
     reports = reports_api(client, idx, token)
     all_reports: List[List[str]] = []
     while len(reports) != 0:
-        time.sleep(RATE_LIMIT_SECS)
         all_reports.extend(reports)
         idx += BATCH_SIZE
         reports = reports_api(client, idx, token)
@@ -94,6 +106,25 @@ def reports_api(
     return response.json()['data']
 
 
+def _tbody_from_link(client: requests.Session, link: str) -> Optional[Any]:
+    """
+    Return the tbody element containing transactions for this senator.
+    Return None if no such tbody element exists.
+    """
+    report_url = '{0}{1}'.format(ROOT, link)
+    report_response = client.get(report_url)
+    # If the page is redirected, then the session ID has expired
+    if report_response.url == LANDING_PAGE_URL:
+        LOGGER.info('Resetting CSRF token and session cookie')
+        _csrf(client)
+        report_response = client.get(report_url)
+    report = BeautifulSoup(report_response.text, 'lxml')
+    tbodies = report.find_all('tbody')
+    if len(tbodies) == 0:
+        return None
+    return tbodies[0]
+
+
 def txs_for_report(client: requests.Session, row: List[str]) -> pd.DataFrame:
     """
     Convert a row from the periodic transaction reports API to a DataFrame
@@ -101,16 +132,16 @@ def txs_for_report(client: requests.Session, row: List[str]) -> pd.DataFrame:
     """
     first, last, _, link_html, date_received = row
     link = BeautifulSoup(link_html, 'lxml').a.get('href')
-    report_url = '{0}{1}'.format(ROOT, link)
-    report_html = client.get(report_url).text
-    report = BeautifulSoup(report_html, 'lxml')
+    # We cannot parse PDFs
+    if link[:len(PDF_PREFIX)] == PDF_PREFIX:
+        return pd.DataFrame()
 
-    tbodies = report.find_all('tbody')
-    if len(tbodies) == 0:
+    tbody = _tbody_from_link(client, link)
+    if not tbody:
         return pd.DataFrame()
 
     stocks = []
-    for table_row in tbodies[0].find_all('tr'):
+    for table_row in tbody.find_all('tr'):
         cols = [c.get_text() for c in table_row.find_all('td')]
         tx_date, ticker, asset_name, asset_type, order_type, tx_amount =\
             cols[1], cols[3], cols[4], cols[5], cols[6], cols[7]
@@ -133,10 +164,11 @@ def txs_for_report(client: requests.Session, row: List[str]) -> pd.DataFrame:
 def main() -> pd.DataFrame:
     LOGGER.info('Initializing client')
     client = requests.Session()
+    client.get = add_rate_limit(client.get)
+    client.post = add_rate_limit(client.post)
     reports = senator_reports(client)
     all_txs = pd.DataFrame()
     for i, row in enumerate(reports):
-        time.sleep(RATE_LIMIT_SECS)
         if i % 10 == 0:
             LOGGER.info('Fetching report #{}'.format(i))
             LOGGER.info('{} transactions total'.format(len(all_txs)))

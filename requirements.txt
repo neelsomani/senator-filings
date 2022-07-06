@@ -1,5 +1,5 @@
 beautifulsoup4==4.5.3
-lxml==4.6.5
+lxml==4.9.1
 jupyterlab==2.2.10
 matplotlib==3.2.1
 pandas==0.25.3

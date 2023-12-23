@@ -173,7 +173,7 @@ def main() -> pd.DataFrame:
             LOGGER.info('Fetching report #{}'.format(i))
             LOGGER.info('{} transactions total'.format(len(all_txs)))
         txs = txs_for_report(client, row)
-        all_txs = all_txs.append(txs)
+        all_txs = pd.concat([all_txs, txs], ignore_index=True)
     return all_txs
 
 

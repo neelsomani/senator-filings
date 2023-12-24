@@ -1,0 +1,100 @@
+tx_date,file_date,last_name,first_name,order_type,ticker,asset_name,tx_amount,option_type,strike_price,expiry
+"
+                                        11/27/2023
+                                    ",12/19/2023,Capito,Shelley M,Sale (Partial),WFC,Wells Fargo & Company,"$1,001 - $15,000",,,
+"
+                                        11/27/2023
+                                    ",12/19/2023,Capito,Shelley M,Sale (Full),SHEL,Royal Dutch Shell Plc ADR,"$1,001 - $15,000",,,
+"
+                                        12/05/2023
+                                    ",12/18/2023,"McConnell, Jr.",A. Mitchell,Purchase,WFC,Wells Fargo & Company Common Stock,"$1,001 - $15,000",,,
+"
+                                        11/22/2023
+                                    ",12/15/2023,Tuberville,Thomas H,Purchase,MDLZ,"Mondelez International, Inc. - Class A Common Stoc","$1,001 - $15,000",Put,70.00,01/19/2024
+"
+                                        11/21/2023
+                                    ",12/15/2023,Tuberville,Thomas H,Sale (Full),CLF,Cleveland-Cliffs Inc,"$1,001 - $15,000",Call,20.00,07/19/2024
+"
+                                        11/21/2023
+                                    ",12/15/2023,Tuberville,Thomas H,Purchase,KEY,KeyCorp Common Stock,"$15,001 - $50,000",,,
+"
+                                        11/21/2023
+                                    ",12/15/2023,Tuberville,Thomas H,Sale (Full),FGBI,First Gurty Banc,"$15,001 - $50,000",,,
+"
+                                        11/20/2023
+                                    ",12/15/2023,Tuberville,Thomas H,Sale (Full),ABBV,Abbvie Inc,"$1,001 - $15,000",Put,130.00,09/20/2024
+"
+                                        11/16/2023
+                                    ",12/15/2023,Tuberville,Thomas H,Sale (Full),BMY,Bristol-Myers Squibb Company,"$1,001 - $15,000",Put,50.00,06/21/2024
+"
+                                        11/15/2023
+                                    ",12/15/2023,Tuberville,Thomas H,Sale (Full),AMAT,Applied Materials,"$1,001 - $15,000",Put,135.00,09/20/2024
+"
+                                        11/15/2023
+                                    ",12/15/2023,Tuberville,Thomas H,Sale (Full),MCHP,Microchip Technology,"$1,001 - $15,000",Put,80.00,10/18/2024
+"
+                                        11/14/2023
+                                    ",12/15/2023,Tuberville,Thomas H,Sale (Full),OXY,Occidental Petroleum Corp,"$1,001 - $15,000",Call,65.00,06/21/2024
+"
+                                        11/14/2023
+                                    ",12/15/2023,Tuberville,Thomas H,Sale (Full),OXY,Occidental Petroleum Corp,"$1,001 - $15,000",Put,60.00,05/17/2024
+"
+                                        11/09/2023
+                                    ",12/15/2023,Tuberville,Thomas H,Sale (Full),CLF,Cleveland-Cliffs Inc,"$1,001 - $15,000",Call,20.00,01/17/2025
+"
+                                        11/09/2023
+                                    ",12/15/2023,Tuberville,Thomas H,Sale (Full),MSFT,Microsoft Corporation - Common Stock,"$1,001 - $15,000",Put,305.00,09/20/2024
+"
+                                        11/07/2023
+                                    ",12/15/2023,Tuberville,Thomas H,Purchase,X,United States Steel Corp,"$1,001 - $15,000",Put,20.00,06/21/2024
+"
+                                        11/07/2023
+                                    ",12/12/2023,Boozman,John,Sale (Partial),SHY,iShares 1-3 Year Treasury Bond ETF,"$1,001 - $15,000",,,
+"
+                                        11/07/2023
+                                    ",12/12/2023,Boozman,John,Sale (Partial),CMBS,iShares CMBS Bond ETF,"$1,001 - $15,000",,,
+"
+                                        11/29/2023
+                                    ",12/12/2023,Boozman,John,Sale (Partial),TLT,20+ Year Treas Bond Ishares ETF,"$1,001 - $15,000",,,
+"
+                                        11/07/2023
+                                    ",12/12/2023,Boozman,John,Sale (Partial),AGZ,iShares  Agency Bond ETF,"$1,001 - $15,000",,,
+"
+                                        11/07/2023
+                                    ",12/12/2023,Boozman,John,Sale (Partial),GBIL,Goldman Sachs Access Treasury 0-1 Year ETF,"$1,001 - $15,000",,,
+"
+                                        11/07/2023
+                                    ",12/12/2023,Boozman,John,Sale (Partial),GIGB,Goldman Sachs Access Investment Grade Corporate Bo,"$1,001 - $15,000",,,
+"
+                                        11/07/2023
+                                    ",12/12/2023,Boozman,John,Purchase,JMBS,Janus Henderson Mortgage-Backed Securities ETF,"$1,001 - $15,000",,,
+"
+                                        11/29/2023
+                                    ",12/12/2023,Boozman,John,Purchase,SHY,iShares 1-3 Year Treasury Bond ETF,"$1,001 - $15,000",,,
+"
+                                        11/08/2023
+                                    ",12/12/2023,Boozman,John,Purchase,TLH,iShares 10-20 Year Treasury Bond ETF,"$1,001 - $15,000",,,
+"
+                                        11/07/2023
+                                    ",12/12/2023,Boozman,John,Purchase,TLT,20+ Year Treas Bond Ishares ETF,"$1,001 - $15,000",,,
+"
+                                        11/07/2023
+                                    ",12/12/2023,Boozman,John,Purchase,MBB,iShares MBS ETF,"$1,001 - $15,000",,,
+"
+                                        11/30/2023
+                                    ",12/11/2023,Capito,Shelley M,Sale (Partial),MSFT,Microsoft Corp,"$1,001 - $15,000",,,
+"
+                                        11/08/2023
+                                    ",12/07/2023,Whitehouse,Sheldon,Purchase,CELH,Celsius Holdings Inc,"$1,001 - $15,000",,,
+"
+                                        11/29/2023
+                                    ",12/07/2023,Whitehouse,Sheldon,Sale (Full),VLTO,Veralto Corporation,"$1,001 - $15,000",,,
+"
+                                        11/29/2023
+                                    ",12/07/2023,Whitehouse,Sheldon,Sale (Full),VLTO,Veralto Corporation,"$1,001 - $15,000",,,
+"
+                                        11/16/2023
+                                    ",12/07/2023,Whitehouse,Sheldon,Sale (Full),KMB,Kimberly-Clark Corp,"$50,001 - $100,000",,,
+"
+                                        11/29/2023
+                                    ",12/07/2023,Whitehouse,Sheldon,Sale (Full),VLTO,Veralto Corporation,"$1,001 - $15,000",,,

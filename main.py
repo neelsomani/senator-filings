@@ -1,14 +1,14 @@
 """ Scrape the stock transactions from Senator periodic filings. """
-
 from bs4 import BeautifulSoup
-
 import logging
 import pandas as pd
 import pickle
 import requests
 import time
 from typing import Any, List, Optional
-
+from datetime import datetime
+import os
+import re
 
 ROOT = 'https://efdsearch.senate.gov'
 LANDING_PAGE_URL = '{}/search/home/'.format(ROOT)
@@ -90,7 +90,7 @@ def reports_api(
         'length': str(BATCH_SIZE),
         'report_types': '[11]',
         'filer_types': '[]',
-        'submitted_start_date': '01/01/2012 00:00:00',
+        'submitted_start_date': '12/01/2023 00:00:00',
         'submitted_end_date': '',
         'candidate_state': '',
         'senator_state': '',
@@ -147,6 +147,22 @@ def txs_for_report(client: requests.Session, row: List[str]) -> pd.DataFrame:
             cols[1], cols[3], cols[4], cols[5], cols[6], cols[7]
         if asset_type != 'Stock' and ticker.strip() in ('--', ''):
             continue
+
+        # Clean up 'ticker' and 'asset_name'
+        ticker = ticker.replace('\n', '').replace('\r', '').strip()
+        asset_name = asset_name.replace('\n', '').replace('\r', '').strip()
+
+        # Initialize option details
+        option_type, strike_price, expiry = None, None, None
+
+        # Check if 'asset_name' contains option information and extract it
+        if 'Option Type:' in asset_name:
+            option_info = re.search(r'Option Type:\s*(\w+)\s*Strike price:\s*\$(\d+\.\d+)\s*Expires:\s*(\d{2}/\d{2}/\d{4})', asset_name)
+            if option_info:
+                option_type, strike_price, expiry = option_info.groups()
+                # Clean 'asset_name' to remove option details
+                asset_name = asset_name.split('Option Type:')[0].strip()
+
         stocks.append([
             tx_date,
             date_received,
@@ -155,11 +171,15 @@ def txs_for_report(client: requests.Session, row: List[str]) -> pd.DataFrame:
             order_type,
             ticker,
             asset_name,
-            tx_amount
+            tx_amount,
+            option_type,
+            strike_price,
+            expiry
         ])
-    return pd.DataFrame(stocks).rename(
-        columns=dict(enumerate(REPORT_COL_NAMES)))
 
+    df = pd.DataFrame(stocks).rename(columns=dict(enumerate(REPORT_COL_NAMES + ['option_type', 'strike_price', 'expiry'])))
+
+    return df
 
 def main() -> pd.DataFrame:
     LOGGER.info('Initializing client')
@@ -174,8 +194,19 @@ def main() -> pd.DataFrame:
             LOGGER.info('{} transactions total'.format(len(all_txs)))
         txs = txs_for_report(client, row)
         all_txs = pd.concat([all_txs, txs], ignore_index=True)
-    return all_txs
+    
+    # Generate a timestamp for the filename
+    timestamp = datetime.now().strftime("%Y%m%d")
+    filename_base = f"output/trades_{timestamp}"
 
+    # Ensure the 'output' directory exists
+    os.makedirs("output", exist_ok=True)
+
+    # Save to CSV and JSON
+    all_txs.to_csv(f"{filename_base}.csv", index=False)
+    all_txs.to_json(f"{filename_base}.json", orient='records', lines=True)
+
+    return all_txs
 
 if __name__ == '__main__':
     log_format = '[%(asctime)s %(levelname)s] %(message)s'

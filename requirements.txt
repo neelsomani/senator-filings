@@ -1,6 +1,6 @@
 beautifulsoup4==4.5.3
 lxml==4.6.5
-jupyterlab==2.2.10
+jupyterlab==3.6.7
 matplotlib==3.2.1
 pandas==0.25.3
 yfinance==0.1.54
